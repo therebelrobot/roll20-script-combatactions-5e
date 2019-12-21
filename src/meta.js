@@ -1,5 +1,5 @@
 export const meta = {
-  command: 'module',
+  command: 'combatActions',
   version: '0.0.2',
   debug: true,
 };
