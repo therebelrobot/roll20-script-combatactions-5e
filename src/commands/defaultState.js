@@ -1,3 +1,4 @@
 export const defaultState = {
-  movementRemainingThisTurn: {}
+  movementRemainingThisTurn: {},
+  difficultTerrain: false,
 }

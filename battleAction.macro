@@ -1,0 +1,42 @@
+!combatActions ?{Combat Action
+  | Movement, movement --target @{selected|token_id} --type ?{Movement Type
+    | Move, move --distance ?{ Distance }
+    | Climb - 2:1 ft., climb --distance ?{ Distance }
+    | Swim - 2:1 ft., swim --distance ?{ Distance }
+    | Drop prone - 0 ft., dropProne --distance 0
+    | Crawl - 2:1 ft., crawl --distance ?{ Distance }
+    | Stand up - Half your speed, standUp
+    | High jump - 3 + STR mod, highJump
+    | Long jump - STR, longJump
+    | Move while grappling - 2:1 ft., moveWhileGrappling
+    | Improvise - anything else, improvise
+  }
+  | Action, action --target @{selected|token_id}
+  | Bonus Action, bonus action --target @{selected|token_id}
+  | Reaction, reaction --target @{selected|token_id}
+}
+
+---- how to:
+html encode starting with the deepest ?{} level, and go up.
+don't worry about @{} blocks
+above, this would be the `?{ Distance` block, followed by the `?{Movement Type` block
+
+---- compiled:
+
+!combatActions ?{Combat Action
+  | Movement, movement --target @{selected|token_id} --type &quest;&lcub;Movement Type
+&NewLine;    &vert; Move&comma; move --distance &amp;quest&semi;&amp;lcub&semi; Distance &amp;rcub&semi;
+&NewLine;    &vert; Climb - 2&colon;1 ft&period;&comma; climb --distance &amp;quest&semi;&amp;lcub&semi; Distance &amp;rcub&semi;
+&NewLine;    &vert; Swim - 2&colon;1 ft&period;&comma; swim --distance &amp;quest&semi;&amp;lcub&semi; Distance &amp;rcub&semi;
+&NewLine;    &vert; Drop prone - 0 ft&period;&comma; dropProne --distance 0
+&NewLine;    &vert; Crawl - 2&colon;1 ft&period;&comma; crawl --distance &amp;quest&semi;&amp;lcub&semi; Distance &amp;rcub&semi;
+&NewLine;    &vert; Stand up - Half your speed&comma; standUp
+&NewLine;    &vert; High jump - 3 &plus; STR mod&comma; highJump
+&NewLine;    &vert; Long jump - STR&comma; longJump
+&NewLine;    &vert; Move while grappling - 2&colon;1 ft&period;&comma; moveWhileGrappling
+&NewLine;    &vert; Improvise - anything else&comma; improvise
+&NewLine;  &rcub;
+  | Action, action --target @{selected|token_id}
+  | Bonus Action, bonus action --target @{selected|token_id}
+  | Reaction, reaction --target @{selected|token_id}
+}

@@ -14,13 +14,23 @@ const inputHandler = function(msg) {
 
   debugLog(`handle input > ${msg.content}`);
 
-  const args = msg.content.split(' ').filter(arg => typeof arg === 'string').map(str => str.trim());
+  const args = msg.content
+    .split(' ')
+    .filter(arg => typeof arg === 'string' && arg.length)
+    .map(str => str.trim());
 
   if (args[0] === `!${meta.command}`) {
-    debugLog('command was called! <');
+    debugLog(`command was called! < ${args.join()}`);
     args.shift();
     const subCommand = args[0]
+
     args.shift();
+
+    debugLog(JSON.stringify({
+      subCommand,
+      hasOwnSubProp: subCommmands.hasOwnProperty(subCommand),
+      hasOwnHandler: subCommmands.hasOwnProperty(subCommand) && subCommmands[subCommand].hasOwnProperty('handler')
+    }))
     if (subCommand && subCommmands.hasOwnProperty(subCommand) && subCommmands[subCommand].hasOwnProperty('handler')) {
       debugLog(`subcommand was called! < ${subCommand}`);
       subCommmands[subCommand].handler(args);
