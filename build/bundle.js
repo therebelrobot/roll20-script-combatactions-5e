@@ -64,6 +64,48 @@
     return target;
   }
 
+  function _slicedToArray(arr, i) {
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+  }
+
+  function _arrayWithHoles(arr) {
+    if (Array.isArray(arr)) return arr;
+  }
+
+  function _iterableToArrayLimit(arr, i) {
+    if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
+      return;
+    }
+
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"] != null) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  function _nonIterableRest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance");
+  }
+
   var helpMeta = {
     command: 'help',
     helpText: 'This help dialog.'
@@ -74,9 +116,15 @@
     helpText: "Perform a movement. available options:\n  - move\n  - climb\n  - swim\n  - dropProne\n  - crawl\n  - standUp\n  - highJump\n  - longJump\n  - moveWithGrapple\n  - improvise\n"
   };
 
+  var actionMeta = {
+    command: 'action',
+    helpText: "Perform an action."
+  };
+
   var commandMetas = {
     help: helpMeta,
-    movement: movementMeta
+    movement: movementMeta,
+    action: actionMeta
   };
 
   var formatHelp = function formatHelp(name, helpText) {
@@ -369,64 +417,141 @@
 
   var images = {
     scroll: {
-      top: 'https://raw.githubusercontent.com/therebelbeta/custom_r20_imports/master/Top.png',
-      middle: 'https://raw.githubusercontent.com/therebelbeta/custom_r20_imports/master/Middle.png',
-      bottom: 'https://raw.githubusercontent.com/therebelbeta/custom_r20_imports/master/Bottom.png'
+      top: "https://raw.githubusercontent.com/therebelbeta/custom_r20_imports/master/Top.png",
+      middle: "https://raw.githubusercontent.com/therebelbeta/custom_r20_imports/master/Middle.png",
+      bottom: "https://raw.githubusercontent.com/therebelbeta/custom_r20_imports/master/Bottom.png"
     }
   };
   var colors = {
-    text: '#787878',
-    redText: '#750000',
-    greenText: '#00751f'
+    text: "#787878",
+    redText: "#750000",
+    greenText: "#00751f"
   };
   var style = {
-    caScrollTop: "\n    box-sizing: border-box;\n    width: 100%;\n    height: 133px;\n    background-image: url(".concat(images.scroll.top, ");\n    background-repeat: no-repeat;\n    background-size: 100% auto;\n    background-position: bottom center;\n    position: relative;\n    left: -22px;\n  ").split('\n').join(''),
-    caTopTitle: "\n    font-family: Palatino, Georgia, serif;\n    font-size: 15px;\n    color: #3d0500;\n    position: absolute;\n    bottom: 25px;\n    left: 51px;\n  ".split('\n').join(''),
-    caTopSubtitle: "\n    font-family: Arial;\n    text-transform: uppercase;\n    letter-spacing: 1px;\n    font-size: 8px;\n    font-weight: lighter;\n    color: ".concat(colors.text, ";\n    position: absolute;\n    bottom: 2px;\n    left: 51px;\n  ").split('\n').join(''),
-    caScrollMiddle: "\n    width: 100%;\n    height: auto;\n    background-image: url(".concat(images.scroll.middle, ");\n    background-repeat: repeat-y;\n    background-size: 100% auto;\n    background-position: top left;\n    position: relative;\n    left: -22px;\n  ").split('\n').join(''),
-    caMiddleParagraph: "\n    font-family: Palatino, Georgia, serif;\n    font-size: 12px;\n    color: #363636;\n    position: relative;\n    width: 60%;\n    left: 65px;\n    top: -21px;\n  ".split('\n').join(''),
-    caScrollBottom: "\n    width: 100%;\n    height: 133px;\n    background-image: url(".concat(images.scroll.bottom, ");\n    background-repeat: no-repeat;\n    background-size: 98% auto;\n    background-position: top center;\n    position: relative;\n    top: -9px;\n    left: -20px;\n  ").split('\n').join(''),
-    roll: "\n    font-weight: bold;\n    font-size: 20px;\n    color: ".concat(colors.text, ";\n  ").split('\n').join(''),
-    rollFail: "\n    font-size: 22px;\n    color: ".concat(colors.redText, ";\n    ").split('\n').join(''),
-    rollSuccess: "\n    font-size: 22px;\n    color: ".concat(colors.greenText, ";\n  ").split('\n').join('')
+    caScrollTop: "\n    box-sizing: border-box;\n    width: 100%;\n    height: 133px;\n    background-image: url(".concat(images.scroll.top, ");\n    background-repeat: no-repeat;\n    background-size: 100% auto;\n    background-position: bottom center;\n    position: relative;\n    left: -22px;\n  ").split("\n").join(""),
+    caTopTitle: "\n    font-family: Palatino, Georgia, serif;\n    font-size: 15px;\n    color: #3d0500;\n    position: absolute;\n    bottom: 25px;\n    left: 51px;\n  ".split("\n").join(""),
+    caTopSubtitle: "\n    font-family: Arial;\n    text-transform: uppercase;\n    letter-spacing: 1px;\n    font-size: 8px;\n    font-weight: lighter;\n    color: ".concat(colors.text, ";\n    position: absolute;\n    bottom: 2px;\n    left: 51px;\n  ").split("\n").join(""),
+    caScrollMiddle: "\n    width: 100%;\n    height: auto;\n    background-image: url(".concat(images.scroll.middle, ");\n    background-repeat: repeat-y;\n    background-size: 100% auto;\n    background-position: top left;\n    position: relative;\n    left: -22px;\n  ").split("\n").join(""),
+    caMiddleParagraph: "\n    font-family: Palatino, Georgia, serif;\n    font-size: 12px;\n    color: #363636;\n    position: relative;\n    width: 60%;\n    left: 65px;\n    top: -21px;\n  ".split("\n").join(""),
+    caScrollBottom: "\n    width: 100%;\n    height: 133px;\n    background-image: url(".concat(images.scroll.bottom, ");\n    background-repeat: no-repeat;\n    background-size: 98% auto;\n    background-position: top center;\n    position: relative;\n    top: -9px;\n    left: -20px;\n  ").split("\n").join(""),
+    roll: "\n    font-weight: bold;\n    font-size: 20px;\n    color: ".concat(colors.text, ";\n  ").split("\n").join(""),
+    rollFail: "\n    font-size: 22px;\n    color: ".concat(colors.redText, ";\n    ").split("\n").join(""),
+    rollSuccess: "\n    font-size: 22px;\n    color: ".concat(colors.greenText, ";\n  ").split("\n").join("")
   };
 
   var formattedMessage = function formattedMessage(title, subtitle, contents) {
-    return "\n  <div>\n    <div style=\"".concat(style.caScrollTop, "\">\n      <h1 style=\"").concat(style.caTopTitle, "\">").concat(convertFont(title, 'gothic'), "</h1>\n      <h2 style=\"").concat(style.caTopSubtitle, "\">").concat(subtitle, "</h2>\n    </div>\n    <div style=\"").concat(style.caScrollMiddle, "\">\n      <p style=\"").concat(style.caMiddleParagraph, "\">\n        ").concat(contents.split('\n').join('<br/><br/>'), "\n      </p>\n    </div>\n    <div style=\"").concat(style.caScrollBottom, "\"></div>\n  </div>\n  ").split('\n').join('');
+    return "\n  <div>\n    <div style=\"".concat(style.caScrollTop, "\">\n      <h1 style=\"").concat(style.caTopTitle, "\">").concat(convertFont(title, "gothic"), "</h1>\n      <h2 style=\"").concat(style.caTopSubtitle, "\">").concat(subtitle, "</h2>\n    </div>\n    <div style=\"").concat(style.caScrollMiddle, "\">\n      <p style=\"").concat(style.caMiddleParagraph, "\">\n        ").concat(contents.split("\n").join("<br/><br/>"), "\n      </p>\n    </div>\n    <div style=\"").concat(style.caScrollBottom, "\"></div>\n  </div>\n  ").split("\n").join("");
   };
 
-  var hr = '\n---------------------------\n';
+  var hr = "\n---------------------------\n";
   var renderTemplate = {
     movement: {
       move: function move(remainingSpeed, currentMovement, canMove) {
-        return formattedMessage('Movement: Move', "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You moved ".concat(currentMovement, " ft.") : "You cannot move ".concat(currentMovement, " ft. You only have ").concat(remainingSpeed, " ft. remaining this turn."), "</strong>\n      ").concat(state.combatActions.difficultTerrain ? '<strong>You are moving over difficult terrain, which is 2 ft. for every 1 ft. taken</strong>\n' : '').concat(hr, "\n      ").concat(remainingSpeed > 1 ? "You can switch back and forth between your walking and your flying speeds during your move. Whenever you switch, subtract the distance you've already moved from the new speed.\n      " : '', "You can move through a non-hostile creature's space.\n      You can move through a hostile creature's space only if the creature is at least two sizes larger or smaller than you.\n      Another creature's space is difficult terrain for you.\n      Whether a creature is a friend or an enemy, you can't willingly end your move in its space.\n    "));
+        return formattedMessage("Movement: Move", "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You moved ".concat(currentMovement, " ft.") : "You cannot move ".concat(currentMovement, " ft. You only have ").concat(remainingSpeed, " ft. remaining this turn."), "</strong>\n      ").concat(state.combatActions.difficultTerrain ? "<strong>You are moving over difficult terrain, which is 2 ft. for every 1 ft. taken</strong>\n" : "").concat(hr, "\n      ").concat(remainingSpeed > 1 ? "You can switch back and forth between your walking and your flying speeds during your move. Whenever you switch, subtract the distance you've already moved from the new speed.\n      " : "", "You can move through a non-hostile creature's space.\n      You can move through a hostile creature's space only if the creature is at least two sizes larger or smaller than you.\n      Another creature's space is difficult terrain for you.\n      Whether a creature is a friend or an enemy, you can't willingly end your move in its space.\n    "));
       },
       climb: function climb(remainingSpeed, currentMovement, canMove) {
-        return formattedMessage('Movement: Climb', "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You climbed ".concat(currentMovement, " ft.") : "You cannot climb ".concat(currentMovement, " ft. You only have ").concat(remainingSpeed, " ft. remaining this turn."), "</strong>\n      ").concat(state.combatActions.difficultTerrain ? '<strong>You are climbing over difficult terrain, which is 4 ft. (difficult + climb) for every 1 ft. taken</strong>\n' : '').concat(hr, "\n      ").concat(canMove ? 'This may involve a Strength (Athletics) check if the climb is difficult. The result is below if needed:' : '', "\n    "));
+        return formattedMessage("Movement: Climb", "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You climbed ".concat(currentMovement, " ft.") : "You cannot climb ".concat(currentMovement, " ft. You only have ").concat(remainingSpeed, " ft. remaining this turn."), "</strong>\n      ").concat(state.combatActions.difficultTerrain ? "<strong>You are climbing over difficult terrain, which is 4 ft. (difficult + climb) for every 1 ft. taken</strong>\n" : "").concat(hr, "\n      ").concat(canMove ? "This may involve a Strength (Athletics) check if the climb is difficult. The result is below if needed:" : "", "\n    "));
       },
       swim: function swim(remainingSpeed, currentMovement, canMove) {
-        return formattedMessage('Movement: Swim', "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You swam ".concat(currentMovement, " ft.") : "You cannot swim ".concat(currentMovement, " ft. You only have ").concat(remainingSpeed, " ft. remaining this turn."), "</strong>\n      ").concat(state.combatActions.difficultTerrain ? '<strong>You are swimming over difficult terrain, which is 4 ft. (difficult + swim) for every 1 ft. taken</strong>\n' : '').concat(hr, "\n      ").concat(canMove ? 'This may involve a Strength (Athletics) check if the swim is difficult. The result is below if needed:' : '', "\n    "));
+        return formattedMessage("Movement: Swim", "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You swam ".concat(currentMovement, " ft.") : "You cannot swim ".concat(currentMovement, " ft. You only have ").concat(remainingSpeed, " ft. remaining this turn."), "</strong>\n      ").concat(state.combatActions.difficultTerrain ? "<strong>You are swimming over difficult terrain, which is 4 ft. (difficult + swim) for every 1 ft. taken</strong>\n" : "").concat(hr, "\n      ").concat(canMove ? "This may involve a Strength (Athletics) check if the swim is difficult. The result is below if needed:" : "", "\n    "));
       },
       dropProne: function dropProne(remainingSpeed, currentMovement, canMove) {
-        return formattedMessage('Movement: Drop Prone', "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>You dropped prone.</strong>".concat(hr, "\n      You can drop prone without using any of your speed\n      To move while prone, you must crawl or use magic such as teleportation\n      Dropping prone adds the <i>Prone</i> condition (melee attacks against you have advantage, ranged attacks against you have disadvantage, your own attacks have disadvantage)\n    "));
+        return formattedMessage("Movement: Drop Prone", "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>You dropped prone.</strong>".concat(hr, "\n      You can drop prone without using any of your speed\n      To move while prone, you must crawl or use magic such as teleportation\n      Dropping prone adds the <i>Prone</i> condition (melee attacks against you have advantage, ranged attacks against you have disadvantage, your own attacks have disadvantage)\n    "));
       },
       crawl: function crawl(remainingSpeed, currentMovement, canMove) {
-        return formattedMessage('Movement: Crawl', "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You crawled ".concat(currentMovement, " ft.") : "You cannot crawl ".concat(currentMovement, " ft. You only have ").concat(remainingSpeed, " ft. remaining this turn."), "</strong>\n      ").concat(state.combatActions.difficultTerrain ? '<strong>You are crawling over difficult terrain, which is 4 ft. (difficult + crawl) for every 1 ft. taken</strong>\n' : '').concat(hr, "\n    "));
+        return formattedMessage("Movement: Crawl", "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You crawled ".concat(currentMovement, " ft.") : "You cannot crawl ".concat(currentMovement, " ft. You only have ").concat(remainingSpeed, " ft. remaining this turn."), "</strong>\n      ").concat(state.combatActions.difficultTerrain ? "<strong>You are crawling over difficult terrain, which is 4 ft. (difficult + crawl) for every 1 ft. taken</strong>\n" : "").concat(hr, "\n    "));
       },
       standUp: function standUp(remainingSpeed, currentMovement, canMove) {
-        return formattedMessage('Movement: Stand Up', "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You stood up." : "You cannot stand up. Standing up takes half your speed, and you only have ".concat(remainingSpeed, " ft. remaining this turn."), "</strong>\n      ").concat(state.combatActions.difficultTerrain ? '<strong>You are standing up over difficult terrain, which is 4 ft. (difficult + crawl) for every 1 ft. taken</strong>\n' : '', "\n    "));
+        return formattedMessage("Movement: Stand Up", "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You stood up." : "You cannot stand up. Standing up takes half your speed, and you only have ".concat(remainingSpeed, " ft. remaining this turn."), "</strong>\n      ").concat(state.combatActions.difficultTerrain ? "<strong>You are standing up over difficult terrain, which is 4 ft. (difficult + crawl) for every 1 ft. taken</strong>\n" : "", "\n    "));
       },
       highJump: function highJump(remainingSpeed, currentMovement, canMove, mod) {
-        return formattedMessage('Movement: High Jump', "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You jumped up ".concat(currentMovement, " ft. + ").concat(mod, " ft. run") : "You cannot jump. You only have ".concat(remainingSpeed, " ft. remaining this turn."), "</strong>").concat(hr, "\n      You leap into the air a number of feet equal to <b>3 + your Strength modifier</b> if you move at least 10 feet on foot immediately before the jump.\",\n      When you make a standing high jump, you can jump only half that distance.\n      You can extend your arms half your height above yourself during the jump.\n      In some circumstances, your DM might allow you to make a Strength (Athletics) check to jump higher than you normally can.\n    "));
+        return formattedMessage("Movement: High Jump", "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You jumped up ".concat(currentMovement, " ft. + ").concat(mod, " ft. run") : "You cannot jump. You only have ".concat(remainingSpeed, " ft. remaining this turn."), "</strong>").concat(hr, "\n      You leap into the air a number of feet equal to <b>3 + your Strength modifier</b> if you move at least 10 feet on foot immediately before the jump.\",\n      When you make a standing high jump, you can jump only half that distance.\n      You can extend your arms half your height above yourself during the jump.\n      In some circumstances, your DM might allow you to make a Strength (Athletics) check to jump higher than you normally can.\n    "));
       },
       longJump: function longJump(remainingSpeed, currentMovement, canMove, mod) {
-        return formattedMessage('Movement: Long Jump', "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You jumped ".concat(currentMovement, " ft. + ").concat(mod, " ft. run") : "You cannot jump. You only have ".concat(remainingSpeed, " ft. remaining this turn."), "</strong>").concat(hr, "\n      You cover a number of feet up to your <b>Strength score</b> if you move at least 10 feet on foot immediately before the jump.\n      When you make a standing long jump, you can leap only half that distance\n      May involve a DC 10 Strength (Athletics) check to clear a low obstacle (no taller than a quarter of the jump's distance). You hit the obstacle on a failed check.\n      ").concat(state.combatActions.difficultTerrain ? 'You are landing on difficult terrain. Roll a DC 10 Dexterity (Acrobatics) check to land on your feet. You land prone on a failed check.' : '', "\n    "));
+        return formattedMessage("Movement: Long Jump", "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You jumped ".concat(currentMovement, " ft. + ").concat(mod, " ft. run") : "You cannot jump. You only have ".concat(remainingSpeed, " ft. remaining this turn."), "</strong>").concat(hr, "\n      You cover a number of feet up to your <b>Strength score</b> if you move at least 10 feet on foot immediately before the jump.\n      When you make a standing long jump, you can leap only half that distance\n      May involve a DC 10 Strength (Athletics) check to clear a low obstacle (no taller than a quarter of the jump's distance). You hit the obstacle on a failed check.\n      ").concat(state.combatActions.difficultTerrain ? "You are landing on difficult terrain. Roll a DC 10 Dexterity (Acrobatics) check to land on your feet. You land prone on a failed check." : "", "\n    "));
       },
       moveWhileGrappling: function moveWhileGrappling(remainingSpeed, currentMovement, canMove) {
-        return formattedMessage('Movement: Move w/ Grapple', "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You drag or carry the grappled creature with you ".concat(currentMovement, " ft.") : "You cannot move ".concat(currentMovement, " ft. You only have ").concat(remainingSpeed, " ft. remaining this turn."), "</strong>\n      ").concat(state.combatActions.difficultTerrain ? '<strong>You are climbing over difficult terrain, which is 4 ft. (difficult + climb) for every 1 ft. taken</strong>\n' : '').concat(hr, "\n      If you move while grappling another creature, your speed is halved, unless the creature is two or more sizes smaller than you.\n    "));
+        return formattedMessage("Movement: Move w/ Grapple", "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      <strong>".concat(canMove ? "You drag or carry the grappled creature with you ".concat(currentMovement, " ft.") : "You cannot move ".concat(currentMovement, " ft. You only have ").concat(remainingSpeed, " ft. remaining this turn."), "</strong>\n      ").concat(state.combatActions.difficultTerrain ? "<strong>You are climbing over difficult terrain, which is 4 ft. (difficult + climb) for every 1 ft. taken</strong>\n" : "").concat(hr, "\n      If you move while grappling another creature, your speed is halved, unless the creature is two or more sizes smaller than you.\n    "));
       },
       improvise: function improvise(remainingSpeed) {
-        return formattedMessage('Movement: Improvise', "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      When you describe a kind of movement not detailed elsewhere, your DM tells you whether it is possible and what kind of roll you need to make, if any, to determine success or failure.\n    ");
+        return formattedMessage("Movement: Improvise", "Feet Remaining: ".concat(remainingSpeed, " ft."), "\n      When you describe a kind of movement not detailed elsewhere, your DM tells you whether it is possible and what kind of roll you need to make, if any, to determine success or failure.\n    ");
+      }
+    },
+    action: {
+      attack: function attack(templateString, name) {
+        return formattedMessage("Action: Attack", name, "\n        Please select your attack\n        ".concat(templateString));
+      },
+      grapple: function grapple() {
+        return formattedMessage("Action: Grapple", "subtitle", "");
+      },
+      shove: function shove() {
+        return formattedMessage("Action: Shove", "subtitle", "");
+      },
+      castSpell: function castSpell() {
+        return formattedMessage("Action: Cast spell", "subtitle", "");
+      },
+      blind: function blind() {
+        return formattedMessage("Action: Blind", "subtitle", "");
+      },
+      disarm: function disarm() {
+        return formattedMessage("Action: Disarm", "subtitle", "");
+      },
+      dash: function dash() {
+        return formattedMessage("Action: Dash", "subtitle", "");
+      },
+      disengage: function disengage() {
+        return formattedMessage("Action: Disengage", "subtitle", "");
+      },
+      dodge: function dodge() {
+        return formattedMessage("Action: Dodge", "subtitle", "");
+      },
+      escape: function escape() {
+        return formattedMessage("Action: Escape", "subtitle", "");
+      },
+      help: function help() {
+        return formattedMessage("Action: Help", "subtitle", "");
+      },
+      useObject: function useObject() {
+        return formattedMessage("Action: Use object", "subtitle", "");
+      },
+      useShield: function useShield() {
+        return formattedMessage("Action: Use shield", "subtitle", "");
+      },
+      equipObject: function equipObject() {
+        return formattedMessage("Action: Equip object", "subtitle", "");
+      },
+      unequipObject: function unequipObject() {
+        return formattedMessage("Action: Unequip object", "subtitle", "");
+      },
+      takeCover: function takeCover() {
+        return formattedMessage("Action: Take cover", "subtitle", "");
+      },
+      hide: function hide() {
+        return formattedMessage("Action: Hide", "subtitle", "");
+      },
+      assistAllyAttack: function assistAllyAttack() {
+        return formattedMessage("Action: Assist ally attack", "subtitle", "");
+      },
+      search: function search() {
+        return formattedMessage("Action: Search", "subtitle", "");
+      },
+      ready: function ready() {
+        return formattedMessage("Action: Ready", "subtitle", "");
+      },
+      setTrap: function setTrap() {
+        return formattedMessage("Action: Set trap", "subtitle", "");
+      },
+      stabilize: function stabilize() {
+        return formattedMessage("Action: Stabilize", "subtitle", "");
+      },
+      classFeature: function classFeature() {
+        return formattedMessage("Action: Class feature", "subtitle", "");
+      },
+      leverageEnvironment: function leverageEnvironment() {
+        return formattedMessage("Action: Leverage environment", "subtitle", "");
+      },
+      improvise: function improvise() {
+        return formattedMessage("Action: Improvise", "subtitle", "");
       }
     }
   };
@@ -630,9 +755,332 @@
     }
   };
 
+  var getRepeatingAttrs = function getRepeatingAttrs(_characterid, type) {
+    var isExpanded = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    var rawCharacterAttributes = findObjs({
+      _type: "attribute",
+      _characterid: _characterid
+    });
+    var matchingAttr = rawCharacterAttributes.filter(function (r20object) {
+      var filterRegex = type ? new RegExp("repeating_".concat(type)) : /repeating_/;
+      var matches = r20object.get("name").match(filterRegex);
+      if (!matches || !matches.length) return false;
+      return true;
+    });
+    if (!matchingAttr || !matchingAttr.length) return matchingAttr;
+    var consolidatedList = {};
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = matchingAttr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var rawAttribute = _step.value;
+        var _rawAttribute$attribu = rawAttribute.attributes,
+            attributeName = _rawAttribute$attribu.name,
+            current = _rawAttribute$attribu.current,
+            max = _rawAttribute$attribu.max,
+            _id = _rawAttribute$attribu._id;
+
+        var _attributeName$split = attributeName.split("_"),
+            _attributeName$split2 = _slicedToArray(_attributeName$split, 4),
+            _ = _attributeName$split2[0],
+            __ = _attributeName$split2[1],
+            sharedId = _attributeName$split2[2],
+            name = _attributeName$split2[3];
+
+        if (!name || !name.length) continue;
+        consolidatedList[sharedId] = consolidatedList[sharedId] || {};
+        consolidatedList[sharedId][name] = isExpanded ? {
+          name: name,
+          current: current,
+          max: max,
+          attributeName: attributeName,
+          attributeId: _id
+        } : current;
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+          _iterator["return"]();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    var consolidatedArray = [];
+
+    for (var _i = 0, _Object$keys = Object.keys(consolidatedList); _i < _Object$keys.length; _i++) {
+      var _sharedId = _Object$keys[_i];
+      consolidatedArray.push(_objectSpread2({}, consolidatedList[_sharedId], {
+        sharedId: _sharedId
+      }));
+    }
+
+    return consolidatedArray;
+  };
+
+  var attack = function attack(args, target) {
+    debugLog("attack handler"); // retrieve list of repeating actions
+    // show character list of actions to perform
+
+    var characterId = target.get("id");
+    var characterName = target.get("name");
+    var repeatingAttacks = getRepeatingAttrs(characterId, "attack"); // options-flag
+    // itemid
+    // atkname
+    // dmgbase
+    // dmgtype
+    // atkattr_base
+    // dmgattr
+    // atkmagic
+    // atkdmgtype
+    // rollbase_dmg
+    // rollbase_crit
+    // atkbonus
+    // rollbase
+
+    var attackString = repeatingAttacks.filter(function (r) {
+      return !!r.atkname;
+    }).map(function (r) {
+      return "[".concat(r.atkname, " - ").concat(r.dmgbase, " ").concat(r.dmgtype, "](~selected|repeating_attack_").concat(r.sharedId, "_attack)");
+    }).join("\n");
+    sendChat("Action", renderTemplate.action.attack(attackString, characterName));
+  };
+
+  var grapple = function grapple(args, target) {
+    debugLog("grapple handler");
+  };
+
+  var shove = function shove(args, target) {
+    debugLog("shove handler");
+  };
+
+  var castSpell = function castSpell(args, target) {
+    debugLog("castSpell handler");
+  };
+
+  var blind = function blind(args, target) {
+    debugLog("blind handler");
+  };
+
+  var disarm = function disarm(args, target) {
+    debugLog("disarm handler");
+  };
+
+  var dash = function dash(args, target) {
+    debugLog("dash handler");
+  };
+
+  var disengage = function disengage(args, target) {
+    debugLog("disengage handler");
+  };
+
+  var dodge = function dodge(args, target) {
+    debugLog("dodge handler");
+  };
+
+  var escape = function escape(args, target) {
+    debugLog("escape handler");
+  };
+
+  var help = function help(args, target) {
+    debugLog("help handler");
+  };
+
+  var useObject = function useObject(args, target) {
+    debugLog("useObject handler");
+  };
+
+  var useShield = function useShield(args, target) {
+    debugLog("useShield handler");
+  };
+
+  var equipObject = function equipObject(args, target) {
+    debugLog("equipObject handler");
+  };
+
+  var unequipObject = function unequipObject(args, target) {
+    debugLog("unequipObject handler");
+  };
+
+  var takeCover = function takeCover(args, target) {
+    debugLog("takeCover handler");
+  };
+
+  var hide = function hide(args, target) {
+    debugLog("hide handler");
+  };
+
+  var assistAllyAttack = function assistAllyAttack(args, target) {
+    debugLog("assistAllyAttack handler");
+  };
+
+  var search = function search(args, target) {
+    debugLog("search handler");
+  };
+
+  var ready = function ready(args, target) {
+    debugLog("ready handler");
+  };
+
+  var setTrap = function setTrap(args, target) {
+    debugLog("setTrap handler");
+  };
+
+  var stabilize = function stabilize(args, target) {
+    debugLog("stabilize handler");
+  };
+
+  var classFeature = function classFeature(args, target) {
+    debugLog("classFeature handler");
+  };
+
+  var leverageEnvironment = function leverageEnvironment(args, target) {
+    debugLog("leverageEnvironment handler");
+  };
+
+  var improvise$1 = function improvise(args, target) {
+    debugLog("improvise handler");
+  };
+
+  var actionHandler = function actionHandler(args, error) {
+    debugLog("actionHandler handler was called! <");
+    args = convertArgs(args);
+    debugLog(JSON.stringify(args));
+    debugLog(JSON.stringify(state.combatActions));
+
+    if (!args["--target"]) {
+      sendChat("".concat(meta.command, " Error:"), "You must select a target for combat actions");
+      return;
+    }
+
+    var targetToken = findObjs({
+      type: "graphic",
+      id: args["--target"]
+    })[0];
+    debugLog(args["--target"]);
+    if (!targetToken) return;
+    var representsId = targetToken.get("represents");
+    var target = findObjs({
+      type: "character",
+      id: representsId
+    })[0];
+    if (!target) return;
+
+    switch (args["--type"]) {
+      case "attack":
+        attack(args, target);
+        break;
+
+      case "grapple":
+        grapple();
+        break;
+
+      case "shove":
+        shove();
+        break;
+
+      case "castSpell":
+        castSpell();
+        break;
+
+      case "blind":
+        blind();
+        break;
+
+      case "disarm":
+        disarm();
+        break;
+
+      case "dash":
+        dash();
+        break;
+
+      case "disengage":
+        disengage();
+        break;
+
+      case "dodge":
+        dodge();
+        break;
+
+      case "escape":
+        escape();
+        break;
+
+      case "help":
+        help();
+        break;
+
+      case "useObject":
+        useObject();
+        break;
+
+      case "useShield":
+        useShield();
+        break;
+
+      case "equipObject":
+        equipObject();
+        break;
+
+      case "unequipObject":
+        unequipObject();
+        break;
+
+      case "takeCover":
+        takeCover();
+        break;
+
+      case "hide":
+        hide();
+        break;
+
+      case "assistAllyAttack":
+        assistAllyAttack();
+        break;
+
+      case "search":
+        search();
+        break;
+
+      case "ready":
+        ready();
+        break;
+
+      case "setTrap":
+        setTrap();
+        break;
+
+      case "stabilize":
+        stabilize();
+        break;
+
+      case "classFeature":
+        classFeature();
+        break;
+
+      case "leverageEnvironment":
+        leverageEnvironment();
+        break;
+
+      case "improvise":
+        improvise$1();
+        break;
+    }
+  };
+
   var commandHandlers = {
     help: helpHandler,
-    movement: movementHandler
+    movement: movementHandler,
+    action: actionHandler
   };
 
   var commandObj = {};
@@ -652,16 +1100,21 @@
   };
 
   var inputHandler = function inputHandler(msg) {
-    if (msg.type !== 'api' || typeof msg.content !== 'string') {
+    if (msg.type !== "api" || typeof msg.content !== "string") {
       return;
     }
 
     debugLog("handle input > ".concat(msg.content));
-    var args = msg.content.split(' ').filter(function (arg) {
-      return typeof arg === 'string' && arg.length;
-    }).map(function (str) {
+    var args = msg.content.split(" ");
+    debugLog(JSON.stringify(args));
+    args = args.filter(function (arg) {
+      return typeof arg === "string" && arg.length;
+    });
+    debugLog(JSON.stringify(args));
+    args = args.map(function (str) {
       return str.trim();
     });
+    debugLog(JSON.stringify(args));
 
     if (args[0] === "!".concat(meta.command)) {
       debugLog("command was called! < ".concat(args.join()));
@@ -671,25 +1124,25 @@
       debugLog(JSON.stringify({
         subCommand: subCommand,
         hasOwnSubProp: commands.hasOwnProperty(subCommand),
-        hasOwnHandler: commands.hasOwnProperty(subCommand) && commands[subCommand].hasOwnProperty('handler')
+        hasOwnHandler: commands.hasOwnProperty(subCommand) && commands[subCommand].hasOwnProperty("handler")
       }));
 
-      if (subCommand && commands.hasOwnProperty(subCommand) && commands[subCommand].hasOwnProperty('handler')) {
+      if (subCommand && commands.hasOwnProperty(subCommand) && commands[subCommand].hasOwnProperty("handler")) {
         debugLog("subcommand was called! < ".concat(subCommand));
         commands[subCommand].handler(args);
       } else {
-        debugLog('invalid args');
-        commands.help.handler(args, "Arguments invalid: ".concat(args.join(' ')));
+        debugLog("invalid args");
+        commands.help.handler(args, "Arguments invalid: ".concat(args.join(" ")));
       }
     }
   };
 
   var turnorderHandler = function turnorderHandler(obj, prev) {
-    if (obj.get('turnorder') === prev.turnorder) return;
-    var turnorder = obj.get('turnorder') === '' ? [] : JSON.parse(obj.get('turnorder'));
-    var prevTurnorder = prev.turnorder === '' ? [] : JSON.parse(prev.turnorder);
+    if (obj.get("turnorder") === prev.turnorder) return;
+    var turnorder = obj.get("turnorder") === "" ? [] : JSON.parse(obj.get("turnorder"));
+    var prevTurnorder = prev.turnorder === "" ? [] : JSON.parse(prev.turnorder);
 
-    if (obj.get('turnorder') === "[]") {
+    if (obj.get("turnorder") === "[]") {
       return;
     }
 
@@ -700,9 +1153,9 @@
   };
 
   var registerEventHandlers = function registerEventHandlers() {
-    debugLog('register event handler <');
-    on('chat:message', inputHandler);
-    on('change:campaign:turnorder', turnorderHandler);
+    debugLog("register event handler <");
+    on("chat:message", inputHandler);
+    on("change:campaign:turnorder", turnorderHandler);
   };
 
   var checkInstall = function checkInstall() {
@@ -711,8 +1164,8 @@
     state.combatActions = state.combatActions || defaultState;
   };
 
-  on('ready', function () {
-    debugLog('on ready <');
+  on("ready", function () {
+    debugLog("on ready <");
     checkInstall();
     registerEventHandlers();
   });

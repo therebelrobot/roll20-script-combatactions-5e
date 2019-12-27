@@ -6,12 +6,38 @@
     | Drop prone - 0 ft., dropProne --distance 0
     | Crawl - 2:1 ft., crawl --distance ?{ Distance }
     | Stand up - Half your speed, standUp
-    | High jump - 3 + STR mod, highJump
-    | Long jump - STR, longJump
+    | High jump - 3 + STR mod, highJump ?{Type: | Standing,--standing true | Running,}
+    | Long jump - STR, longJump ?{Type: | Standing,--standing true | Running,}
     | Move while grappling - 2:1 ft., moveWhileGrappling
     | Improvise - anything else, improvise
   }
-  | Action, action --target @{selected|token_id}
+  | Action, action --target @{selected|token_id} --type ?{Action type
+    | Attack, attack
+    | Grapple, grapple
+    | Shove, shove
+    | Cast spell, castSpell
+    | Blind, blind
+    | Disarm, disarm
+    | Dash, dash
+    | Disengage, disengage
+    | Dodge, dodge
+    | Escape, escape
+    | Help, help
+    | Use object, useObject
+    | Use shield, useShield
+    | Equip object, equipObject
+    | Unequip object, unequipObject
+    | Take cover, takeCover
+    | Hide, hide
+    | Assist ally attack, assistAllyAttack
+    | Search, search
+    | Ready, ready
+    | Set trap, setTrap
+    | Stabilize, stabilize
+    | Class feature, classFeature
+    | Leverage environment, leverageEnvironment
+    | Improvise, improvise
+  }
   | Bonus Action, bonus action --target @{selected|token_id}
   | Reaction, reaction --target @{selected|token_id}
 }
@@ -31,12 +57,38 @@ above, this would be the `?{ Distance` block, followed by the `?{Movement Type` 
 &NewLine;    &vert; Drop prone - 0 ft&period;&comma; dropProne --distance 0
 &NewLine;    &vert; Crawl - 2&colon;1 ft&period;&comma; crawl --distance &amp;quest&semi;&amp;lcub&semi; Distance &amp;rcub&semi;
 &NewLine;    &vert; Stand up - Half your speed&comma; standUp
-&NewLine;    &vert; High jump - 3 &plus; STR mod&comma; highJump
-&NewLine;    &vert; Long jump - STR&comma; longJump
+&NewLine;    &vert; High jump - 3 &plus; STR mod&comma; highJump &amp;quest&semi;&amp;lcub&semi;Type&amp;colon&semi; &amp;vert&semi; Standing&amp;comma&semi;--standing true &amp;vert&semi; Running&amp;comma&semi;&amp;rcub&semi;
+&NewLine;    &vert; Long jump - STR&comma; longJump &amp;quest&semi;&amp;lcub&semi;Type&amp;colon&semi; &amp;vert&semi; Standing&amp;comma&semi;--standing true &amp;vert&semi; Running&amp;comma&semi;&amp;rcub&semi;
 &NewLine;    &vert; Move while grappling - 2&colon;1 ft&period;&comma; moveWhileGrappling
 &NewLine;    &vert; Improvise - anything else&comma; improvise
 &NewLine;  &rcub;
-  | Action, action --target @{selected|token_id}
+  | Action, action --target @{selected|token_id} --type &quest;&lcub;Action type
+&NewLine;    &vert; Attack&comma; attack
+&NewLine;    &vert; Grapple&comma; grapple
+&NewLine;    &vert; Shove&comma; shove
+&NewLine;    &vert; Cast spell&comma; castSpell
+&NewLine;    &vert; Blind&comma; blind
+&NewLine;    &vert; Disarm&comma; disarm
+&NewLine;    &vert; Dash&comma; dash
+&NewLine;    &vert; Disengage&comma; disengage
+&NewLine;    &vert; Dodge&comma; dodge
+&NewLine;    &vert; Escape&comma; escape
+&NewLine;    &vert; Help&comma; help
+&NewLine;    &vert; Use object&comma; useObject
+&NewLine;    &vert; Use shield&comma; useShield
+&NewLine;    &vert; Equip object&comma; equipObject
+&NewLine;    &vert; Unequip object&comma; unequipObject
+&NewLine;    &vert; Take cover&comma; takeCover
+&NewLine;    &vert; Hide&comma; hide
+&NewLine;    &vert; Assist ally attack&comma; assistAllyAttack
+&NewLine;    &vert; Search&comma; search
+&NewLine;    &vert; Ready&comma; ready
+&NewLine;    &vert; Set trap&comma; setTrap
+&NewLine;    &vert; Stabilize&comma; stabilize
+&NewLine;    &vert; Class feature&comma; classFeature
+&NewLine;    &vert; Leverage environment&comma; leverageEnvironment
+&NewLine;    &vert; Improvise&comma; improvise
+&NewLine;  &rcub;
   | Bonus Action, bonus action --target @{selected|token_id}
   | Reaction, reaction --target @{selected|token_id}
 }
